@@ -1,0 +1,101 @@
+@use "@/assets/scss/variables" as *;
+@use "@/assets/scss/mixins" as *;
+
+.next-day {
+  &__title {
+    font-size: 34px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0 0 20px 0;
+
+    @media screen and (max-width: 1199px) {
+      font-size: 28px;
+    }
+
+    @include vp-1023 {
+      font-size: 34px;
+    }
+
+    @include vp-767 {
+      font-size: 24px;
+    }
+  }
+
+  &__list {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    margin: 0 0 30px 0;
+    padding: 0;
+  }
+
+  &__button {
+    background-color: $color-transparent;
+    border: none;
+    border-radius: 10px;
+    color: rgba(189, 189, 189, 1);
+    cursor: pointer;
+    display: flex;
+    font-size: 24px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    padding: 10px 15px;
+    transition: all $trans-default;
+
+    @include vp-1199 {
+      font-size: 18px;
+    }
+
+    @include vp-1023 {
+      font-size: 24px;
+    }
+
+    @include vp-767 {
+      font-size: 18px;
+    }
+
+    &.is-active {
+      background-color: rgba(0, 0, 0, 0.5);
+      color: $color-default-white;
+    }
+
+    @include hover-focus {
+      &:not(.is-active) {
+        background-color: rgba(0, 0, 0, 0.2);
+        color: rgba($color-default-white, 0.9);
+      }
+    }
+  }
+
+  &__result {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-child) {
+      margin: 0 0 20px 0;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0 20px;
+  }
+
+  &__day {
+    font-size: 26px;
+    line-height: 1.2;
+    font-weight: 500;
+    margin: 0 0 5px 0;
+
+    @include vp-767 {
+      font-size: 20px;
+    }
+  }
+
+  &__weather {
+    font-size: 18px;
+    line-height: 1.2;
+  }
+}
