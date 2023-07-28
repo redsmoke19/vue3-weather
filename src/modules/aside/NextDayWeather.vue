@@ -3,20 +3,17 @@ import WeatherIcon from "@/components/WeatherIcon.vue";
 import { computed, inject, ref } from "vue";
 import { getDateMonth } from "@/common/halpers/utils";
 
-const tabs = ref([
+const tabs = [
   {
     name: "2 days",
-    isActive: true,
     days: 2
   },
   {
     name: "3 Days",
-    isActive: false,
     days: 3
   }
-]);
-
-const currentDay = ref(tabs.value[0].days);
+];
+const currentTab = ref(0);
 
 const isEmpty = inject("isEmpty");
 const daily = inject("daily");
@@ -24,21 +21,17 @@ const daily = inject("daily");
 const getDailyFilter = computed(() => {
   if (daily.value.forecast) {
     const days = daily.value.forecast?.forecastday;
-    return days.filter((item, idx) => idx < currentDay.value);
-  } else {
-    return null;
+    return days.filter((item, idx) => idx < tabs[currentTab.value].days);
   }
+  return null;
+  // можно обойтись без else, будет выглядить более читабельно
 });
-
-const getTabsClick = (item) => {
-  currentDay.value = item.days;
-  tabs.value.forEach((i) => {
-    i.isActive = false;
-    if (item === i) {
-      item.isActive = true;
-    }
-  });
+// а вот тут уже handleTabClick по смыслу лучше подходит
+const getTabsClick = (index) => {
+  // переключать табы можно намного проще
+  currentTab.value = index;
 };
+/* При переключении вкладок дней скачут флексы в виджетах. */
 </script>
 
 <template>
@@ -46,12 +39,13 @@ const getTabsClick = (item) => {
     <h2 class="next-day__title">The Next Day Forecast</h2>
     <template v-if="isEmpty">
       <ul class="next-day__list">
-        <li class="next-day__item" v-for="(item, key) in tabs" :key="key">
+        <!-- правильнее называть index, проп key может быть не обязательно index'ом -->
+        <li class="next-day__item" v-for="(item, index) in tabs" :key="index">
           <button
             class="next-day__button"
             type="button"
-            @click="getTabsClick(item)"
-            :class="{ 'is-active': item.isActive }"
+            @click="getTabsClick(index)"
+            :class="{ 'is-active': index === currentTab }"
           >
             {{ item.name }}
           </button>
