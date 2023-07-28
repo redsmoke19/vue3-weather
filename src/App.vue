@@ -1,17 +1,21 @@
 <script setup>
 import AsideWeather from "@/modules/aside/AsideWeather.vue";
 import HomeView from "@/views/HomeView.vue";
-import { getGeo, getWeather, getTest } from "@/api/geo";
-import { computed, onMounted, ref, watch } from 'vue'
+import FetchData from '@/api/weather';
+import { computed, ref, watch, provide } from 'vue'
 
 const geo = ref([]);
 const city = ref("");
-const coords = ref({});
 const weather = ref({});
+const daily = ref({});
 
-const getLocation = async (location) => {
-  geo.value = await getGeo(location);
-};
+const fetchData = new FetchData();
+const isEmptyObject = computed(() => {
+  return Object.keys(weather.value).length !== 0;
+})
+const getTitle = computed(() => {
+  return isEmptyObject.value ? weather.value.weather[0].description : "Choose you city"
+})
 
 const addCoords = computed(() => {
   const {lat, lon} = geo.value[0];
@@ -21,41 +25,32 @@ const addCoords = computed(() => {
   }
 });
 
-const foo = ({lat, lon}) => {
-  console.log(lat + " " + lon)
-  console.log(weather.value)
-}
-
-// onMounted(async () => {
-//   weather.value = await getTest();
-//   console.log(weather.value)
-// })
+const weatherLocation = computed(() => {
+  const value = geo.value[0];
+  return value ? `${value.name}, ${value?.state}, ${value?.country}` : "-";
+})
 
 watch(city, async () => {
   if (city.value.length) {
-    // await getLocation(city.value);
-    geo.value = await getGeo(city.value);
-    coords.value = addCoords;
+    geo.value = await fetchData.getGeoLocation(city.value);
+    weather.value = await fetchData.getCurrentWeather(addCoords.value)
+    daily.value = await fetchData.getDailyWeather(addCoords.value);
   }
 })
 
-watch(geo, async () => {
-  weather.value = await getWeather(addCoords.value);
-  // foo(addCoords.value);
-  // weather.value = await getTest(city.value);
-  console.log(weather.value)
-})
+provide("weather", weather);
+provide("isEmpty", isEmptyObject);
+provide("daily", daily);
 </script>
 
 <template>
-  {{coords}}
   <div class="main-bg">
     <img src="@/assets/img/rain-bg.png" alt="Rain" />
   </div>
   <div class="container">
     <div class="wrapper">
-      <aside-weather v-model="city"/>
-      <home-view />
+      <aside-weather v-model="city" :weather="weather" :location="weatherLocation"/>
+      <home-view :title="getTitle" />
     </div>
   </div>
 </template>

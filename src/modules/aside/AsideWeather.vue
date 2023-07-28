@@ -1,17 +1,32 @@
 <script setup>
-import NextDayWeather from '@/modules/aside/NextDayWeather.vue'
+import NextDayWeather from "@/modules/aside/NextDayWeather.vue";
+import { dateNormalize } from "@/common/halpers/normalize";
+import { computed, inject } from "vue";
 
 const props = defineProps({
   modelValue: {
     type: String
+  },
+  location: {
+    type: String
   }
-})
+});
 
-const emit = defineEmits(['update:modelValue'])
+const weather = inject("weather");
+
+const emit = defineEmits(["update:modelValue"]);
 const handlerModelValue = (evt) => {
-  const value = evt.target.value
-  emit('update:modelValue', value)
-}
+  const value = evt.target.value;
+  emit("update:modelValue", value);
+};
+
+const getCurrentTemp = computed(() => {
+  return weather.value.main?.temp || "-";
+});
+
+const getCurrentTime = computed(() => {
+  return dateNormalize(weather.value.dt);
+});
 
 </script>
 
@@ -28,24 +43,21 @@ const handlerModelValue = (evt) => {
           @keydown.enter="handlerModelValue"
         />
       </div>
-      <!--      <div class="aside__search-result" v-if="cities">-->
-      <!--        <template v-if="cities.length > 1">-->
-      <!--          <p v-for="city in cities" :key="city.lon">-->
-      <!--&lt;!&ndash;            <span>{{city[local_names].en}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span>{{city.country}}</span>&ndash;&gt;-->
-      <!--          </p>-->
-      <!--        </template>-->
-      <!--      </div>-->
     </div>
     <div class="aside__main-icon">
-      <svg-icon name="icon-big-heavy-rain" />
+      <template v-if="weather.weather">
+        <svg-icon :name="weather.weather[0]?.icon" />
+      </template>
+      <template v-else>
+        <svg-icon name="01n" />
+      </template>
     </div>
     <div class="aside__location">
       <svg-icon name="location" width="30" height="30" />
-      <div class="aside__city">Samara, Russia</div>
+      <div class="aside__city">{{props.location}}</div>
     </div>
-    <span class="aside__temp">30.9 &#176;C</span>
-    <span class="aside__time">Friday, 11:50 PM</span>
+    <span class="aside__temp">{{ getCurrentTemp }} &#176;C</span>
+    <span class="aside__time">{{ getCurrentTime }}</span>
     <next-day-weather />
   </aside>
 </template>

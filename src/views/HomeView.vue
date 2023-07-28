@@ -1,11 +1,18 @@
 <script setup>
-import WeatherSlider from '@/modules/WeatherSlider.vue'
-import WeatherHighlight from '@/modules/WeatherHighlight.vue'
+import WeatherSlider from "@/modules/WeatherSlider.vue";
+import WeatherHighlight from "@/modules/WeatherHighlight.vue";
+
+const props = defineProps({
+  title: {
+    type: String,
+    default: "Load weather"
+  }
+});
 </script>
 
 <template>
   <main class="home">
-    <h1 class="title">Heavy Rain</h1>
+    <h1 class="title">{{props.title}}</h1>
     <weather-slider />
     <weather-highlight />
   </main>
@@ -13,6 +20,7 @@ import WeatherHighlight from '@/modules/WeatherHighlight.vue'
 
 <style lang="scss" scoped>
 @use "@/assets/scss/mixins" as *;
+
 .home {
   padding: 40px 0 0 60px;
   display: flex;
@@ -34,6 +42,7 @@ import WeatherHighlight from '@/modules/WeatherHighlight.vue'
   line-height: 1.3;
   color: rgba(255, 255, 255, 0.8);
   margin: 0;
+  text-transform: capitalize;
 
   @include vp-1199 {
     font-size: 80px;
