@@ -9,10 +9,10 @@ const props = defineProps({
   }
 });
 </script>
-
+<!-- У тебя есть router и HomeView. Но по сути роутер и не работает, тк ты не пользуешься <router-view/> компонентом -->
 <template>
   <main class="home">
-    <h1 class="title">{{props.title}}</h1>
+    <h1 class="title">{{ props.title }}</h1>
     <weather-slider />
     <weather-highlight />
   </main>
