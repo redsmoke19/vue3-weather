@@ -4,6 +4,7 @@
 .slider {
   margin: 30px 0 100px 0;
   min-width: 0;
+  user-select: none;
 
   @media screen and (max-width: 1199px) {
     margin: 30px 0 50px 0;
