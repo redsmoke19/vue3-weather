@@ -1,55 +1,72 @@
 <script setup>
 import AsideWeather from "@/modules/aside/AsideWeather.vue";
 import HomeView from "@/views/HomeView.vue";
-import FetchData from '@/api/weather';
-import { computed, ref, watch, provide } from 'vue'
+import useDebouncedRef from "@/hooks/useDebouncedRef";
+import { isEmpty } from "@/common/helpers/isEmpty";
+import { getImage } from "@/utils/image";
+import { computed, ref, watch, provide } from "vue";
+import { api } from "@/common/api/api";
 
 const geo = ref([]);
-const city = ref("");
+const city = useDebouncedRef("", 500);
 const weather = ref({});
 const daily = ref({});
 
-const fetchData = new FetchData();
-const isEmptyObject = computed(() => {
-  return Object.keys(weather.value).length !== 0;
-})
-const getTitle = computed(() => {
-  return isEmptyObject.value ? weather.value.weather[0].description : "Choose you city"
-})
+const { getGeoLocation, getCurrentWeather, getDailyWeather } = api;
 
-const addCoords = computed(() => {
-  const {lat, lon} = geo.value[0];
+const isEmptyObject = computed(() => {
+  return isEmpty(weather.value);
+});
+const getTitle = computed(() => {
+  return isEmptyObject.value ? "Choose you city" : weather.value.weather[0].description;
+});
+
+const getCoords = computed(() => {
+  const { lat, lon } = geo.value;
   return {
     lat,
     lon
-  }
+  };
 });
 
 const weatherLocation = computed(() => {
-  const value = geo.value[0];
-  return value ? `${value.name}, ${value?.state}, ${value?.country}` : "-";
-})
+  const value = geo.value;
+
+  return !isEmpty(value) ? `${value.name}, ${value.state}, ${value.country}` : "-";
+});
+
+const getBgImages = computed(() => {
+  const isEmptyObj = isEmptyObject.value;
+  const imageName = isEmptyObj ? "mist-bg" : getImage(weather.value?.weather[0].main);
+  return new URL(`./assets/img/${imageName}.png`, import.meta.url).href;
+});
 
 watch(city, async () => {
   if (city.value.length) {
-    geo.value = await fetchData.getGeoLocation(city.value);
-    weather.value = await fetchData.getCurrentWeather(addCoords.value)
-    daily.value = await fetchData.getDailyWeather(addCoords.value);
+    geo.value = await getGeoLocation(city.value);
+    if (!geo.value) {
+      console.log('error');
+      return;
+    }
+    daily.value = await getDailyWeather(getCoords.value);
+    weather.value = await getCurrentWeather(getCoords.value);
+    console.log(daily.value);
   }
-})
+});
 
 provide("weather", weather);
 provide("isEmpty", isEmptyObject);
 provide("daily", daily);
+// provide("weather", { weather, isEmptyObject, daily });
 </script>
 
 <template>
   <div class="main-bg">
-    <img src="@/assets/img/rain-bg.png" alt="Rain" />
+    <img :src="getBgImages" alt="Rain" />
   </div>
   <div class="container">
     <div class="wrapper">
-      <aside-weather v-model="city" :weather="weather" :location="weatherLocation"/>
+      <aside-weather v-model="city" :weather="weather" :location="weatherLocation" />
       <home-view :title="getTitle" />
     </div>
   </div>

@@ -1,8 +1,9 @@
 <script setup>
 import NextDayWeather from "@/modules/aside/NextDayWeather.vue";
-import { dateNormalize } from "@/common/halpers/normalize";
+import { dateNormalize } from "@/utils/date";
 import { computed, inject } from "vue";
 
+const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
   modelValue: {
     type: String
@@ -14,8 +15,7 @@ const props = defineProps({
 
 const weather = inject("weather");
 
-const emit = defineEmits(["update:modelValue"]);
-const handlerModelValue = (evt) => {
+const handleModelValue = (evt) => {
   const value = evt.target.value;
   emit("update:modelValue", value);
 };
@@ -27,7 +27,6 @@ const getCurrentTemp = computed(() => {
 const getCurrentTime = computed(() => {
   return dateNormalize(weather.value.dt);
 });
-
 </script>
 
 <template>
@@ -40,21 +39,17 @@ const getCurrentTime = computed(() => {
           type="text"
           placeholder="Search city"
           :value="modelValue"
-          @keydown.enter="handlerModelValue"
+          @input="handleModelValue"
         />
       </div>
     </div>
     <div class="aside__main-icon">
-      <template v-if="weather.weather">
-        <svg-icon :name="weather.weather[0]?.icon" />
-      </template>
-      <template v-else>
-        <svg-icon name="01n" />
-      </template>
+      <svg-icon v-if="weather.weather" :name="weather.weather[0].icon" />
+      <svg-icon v-else name="01n" />
     </div>
     <div class="aside__location">
       <svg-icon name="location" width="30" height="30" />
-      <div class="aside__city">{{props.location}}</div>
+      <div class="aside__city">{{ props.location }}</div>
     </div>
     <span class="aside__temp">{{ getCurrentTemp }} &#176;C</span>
     <span class="aside__time">{{ getCurrentTime }}</span>

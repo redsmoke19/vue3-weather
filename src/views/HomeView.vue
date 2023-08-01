@@ -12,7 +12,7 @@ const props = defineProps({
 
 <template>
   <main class="home">
-    <h1 class="title">{{props.title}}</h1>
+    <h1 class="title">{{ props.title }}</h1>
     <weather-slider />
     <weather-highlight />
   </main>

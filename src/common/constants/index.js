@@ -21,4 +21,13 @@ export const MONTHS = {
   9: "October",
   10: "November",
   11: "December"
+};
+
+export const IMAGES = {
+  "Thunderstorm": "thunderstorm-bg",
+  "Drizzle": "drizzle-bg",
+  "Rain": "rain-bg",
+  "Snow": "snow-bg",
+  "Clear": "clear-bg",
+  "Clouds": "clouds-bg",
 }
