@@ -5,13 +5,15 @@ import { getDateMonth } from "@/utils/date";
 
 const tabs = [
   {
+    name: "1 day",
+    days: 1
+  },
+  {
     name: "2 days",
-    isActive: true,
     days: 2
   },
   {
     name: "3 Days",
-    isActive: false,
     days: 3
   }
 ];

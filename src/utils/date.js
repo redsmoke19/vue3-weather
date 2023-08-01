@@ -2,7 +2,7 @@ import { DAYS, MONTHS } from "@/common/constants";
 
 export const getTime = (time) => {
   const date = new Date(time);
-  return date.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: true });
+  return date.toLocaleString("en-US", { hour: "numeric", minute: "numeric", hour12: false });
 };
 
 export const dateNormalize = (time) => {
