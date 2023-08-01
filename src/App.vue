@@ -50,7 +50,6 @@ watch(city, async () => {
     }
     daily.value = await getDailyWeather(getCoords.value);
     weather.value = await getCurrentWeather(getCoords.value);
-    console.log(daily.value);
   }
 });
 

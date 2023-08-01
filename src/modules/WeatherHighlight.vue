@@ -19,7 +19,7 @@ const getWeatherTime = computed(() => {
 });
 
 const getHumidity = (data) => {
-  if (!isEmpty.value) return "-";
+  if (isEmpty.value) return "-";
   const humidity = data.main?.humidity;
   switch (true) {
     case humidity > 60:
