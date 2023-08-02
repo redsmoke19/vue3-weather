@@ -69,11 +69,15 @@ provide("daily", daily);
       <aside-weather v-model="city" :weather="weather" :location="weatherLocation" />
       <home-view :title="getTitle" />
     </div>
+    <div class="copyright">
+      <span>Developed by <a href="https://olegtsyganov.ru" target="_blank">Oleg Tsyganov</a> 2023</span>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 @use "@/assets/scss/mixins" as *;
+@use "@/assets/scss/variables" as *;
 
 .main-bg {
   position: fixed;
@@ -103,6 +107,25 @@ provide("daily", daily);
 
   @include vp-1023 {
     grid-template-columns: 1fr;
+  }
+}
+
+.copyright {
+  display: flex;
+  justify-content: flex-end;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+  padding: 0 0 20px 0;
+
+  a {
+    text-decoration: underline;
+    color: $color-default-white;
+    transition: opacity $trans-600;
+
+    @include hover-focus {
+      opacity: 0.7;
+    }
   }
 }
 </style>
