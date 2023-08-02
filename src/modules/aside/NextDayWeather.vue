@@ -2,6 +2,7 @@
 import WeatherIcon from "@/components/WeatherIcon.vue";
 import { computed, inject, ref } from "vue";
 import { getDateMonth } from "@/utils/date";
+import { getIcon } from "@/utils/image";
 
 const tabs = [
   {
@@ -54,7 +55,7 @@ const getTabsClick = (index) => {
       </ul>
       <div class="next-day__inner">
         <div class="next-day__result" v-for="item in getDailyFilter" :key="item.date_epoch">
-          <weather-icon :icon="item.day.condition.icon" width="45" height="45" />
+          <weather-icon :icon="getIcon(item.day.condition.text)" width="35" height="35" />
           <div class="next-day__info">
             <span class="next-day__day">{{ getDateMonth(item.date_epoch) }}</span>
             <span class="next-day__weather">{{ item.day.condition.text }}</span>

@@ -18,8 +18,7 @@ const props = defineProps({
 
 <template>
   <div class="weather-icon" :class="className">
-    <img :src="icon" :width="width" :height="height" alt="icon weather" />
-    <!--    <svg-icon :name="icon" :width="width" :height="height" />-->
+    <svg-icon :name="icon" :width="width" :height="height" />
   </div>
 </template>
 

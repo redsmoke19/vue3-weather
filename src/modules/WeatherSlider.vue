@@ -3,6 +3,7 @@ import WeatherIcon from "@/components/WeatherIcon.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { computed, inject } from "vue";
 import { getHours } from "@/utils/date";
+import { getIcon } from "@/utils/image";
 import "swiper/scss";
 
 const daily = inject("daily");
@@ -25,7 +26,12 @@ const getHoursWeather = computed(() => {
     >
       <swiper-slide class="slider__item" v-for="item in getHoursWeather" :key="item.time_epoch">
         <span class="slider__time">{{ getHours(item.time_epoch) }}</span>
-        <weather-icon :icon="item.condition.icon" width="45" height="45" class="slider__icon" />
+        <weather-icon
+          :icon="getIcon(item.condition.text)"
+          width="35"
+          height="35"
+          class="slider__icon"
+        />
         <span class="slider__temp">{{ item.temp_c }}&#176;C</span>
       </swiper-slide>
     </swiper>
